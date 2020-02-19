@@ -1,0 +1,23 @@
+<h1>Configuration</h1>
+
+<div *ngIf="Loading">
+  <p><em>Loading...</em></p>
+</div>
+<table class='table table-striped' *ngIf="!Loading">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Manufacturer</th>
+      <th>Host Device</th>
+      <th>Units</th>
+    </tr>
+  </thead>
+  <tbody *ngFor="let sensor of SensorConfig">
+    <tr>
+      <td>{{sensor.name}}</td>
+      <td>{{sensor.manufacturer}}</td>
+      <td>{{sensor.hostDevice}}</td>
+      <td>{{sensor.sensorUnits}}</td>
+    </tr>
+  </tbody>
+</table>

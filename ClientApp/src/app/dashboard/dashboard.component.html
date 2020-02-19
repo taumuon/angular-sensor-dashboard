@@ -1,0 +1,20 @@
+<h1>Dashboard</h1>
+
+<div class="grid-container">
+  <div class="card-body" *ngFor="let dashboardConfigItem of DashboardConfig">
+    <div class="card-body">
+      <h5 class="card-title">{{dashboardConfigItem.sensorName}}</h5>
+      <div [ngSwitch]="dashboardConfigItem.type">
+        <div *ngSwitchCase="0">
+          <app-dashboard-widget-value [dashboardConfigItem]="dashboardConfigItem"></app-dashboard-widget-value>
+        </div>
+        <div *ngSwitchCase="1">
+          <app-dashboard-widget-chart [dashboardConfigItem]="dashboardConfigItem"></app-dashboard-widget-chart>
+        </div>
+        <div *ngIf="dashboardConfigItem.minMax">
+          <app-dashboard-min-max [dashboardConfigItem]="dashboardConfigItem"></app-dashboard-min-max>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
