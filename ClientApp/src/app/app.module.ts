@@ -12,6 +12,7 @@ import { ConfigurationComponent } from './configuration/configuration.component'
 import { DashboardWidgetValueComponent } from './dashboard-widget-value/dashboard-widget-value.component';
 import { DashboardWidgetChartComponent } from './dashboard-widget-chart/dashboard-widget-chart.component';
 import { DashboardMinMaxComponent } from './dashboard-min-max/dashboard-min-max.component';
+import { ConfigurationNewItemComponent } from './configuration-new-item/configuration-new-item.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { DashboardMinMaxComponent } from './dashboard-min-max/dashboard-min-max.
     ConfigurationComponent,
     DashboardWidgetValueComponent,
     DashboardWidgetChartComponent,
-    DashboardMinMaxComponent
+    DashboardMinMaxComponent,
+    ConfigurationNewItemComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

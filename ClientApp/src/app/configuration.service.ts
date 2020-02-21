@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject, ReplaySubject, of } from 'rxjs';
+import { scan } from 'rxjs/operators';
 
-import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
+import { HubConnection } from '@microsoft/signalr';
 
 import { HubConnectionService } from './hub-connection.service';
 
@@ -18,6 +19,8 @@ export class ConfigurationService {
 
     hubConnected: ReplaySubject<Object>;
 
+    hubConnection: HubConnection;
+
     constructor(private hubConnectionService: HubConnectionService) {
         let url = '/configurationHub';
 
@@ -27,16 +30,28 @@ export class ConfigurationService {
     }
 
     getConfig(): Observable<SensorConfigItem[]> {
-        // TODO: accumulate - first should test/confirm that current behavior is currently broken if add new sensor
-        return this.SensorConfigSubj;
+       return this.SensorConfigSubj
+            .pipe(scan((acc, curr) => curr.concat(acc)));
+    }
+
+    addSensor(sensorConfigItem: SensorConfigItem) {
+        if (this.hubConnection != null) {
+            this.hubConnection.invoke("addSensor", sensorConfigItem.name, sensorConfigItem.manufacturer, sensorConfigItem.hostDevice, sensorConfigItem.units)
+                .then(r => {
+                    if (r !== '') {
+                        alert(`unable to add sensor: ` + r)
+                    };
+                });
+        }
     }
 
     // TODO: use HubStreamSubscription ?
     private startConnection(url: string) {
         this.hubConnectionService.getConnection(url).subscribe(hubConnection => {
             this.connected = true;
+            this.hubConnection = hubConnection;
             hubConnection.on("ConfigUpdated", (item) => {
-                this.SensorConfigSubj.next(item.sensorConfig);
+                this.SensorConfigSubj.next([item.sensorConfig]);
             });
 
             hubConnection.invoke("sensors")

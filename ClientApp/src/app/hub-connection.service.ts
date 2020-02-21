@@ -10,7 +10,7 @@ export class HubConnectionService {
 
     constructor() { }
 
-    getConnection(url: string): ReplaySubject<HubConnection> {
+    getConnection(url: string): Observable<HubConnection> {
 
         if (this.connectionMap.has(url)) {
             return this.connectionMap.get(url);
@@ -20,9 +20,7 @@ export class HubConnectionService {
 
         this.connectionMap.set(url, newConnection);
 
-        return newConnection;
-
-            // .asObservable(); TODO
+        return newConnection.asObservable();
     }
 
     private createConnection(url: string): ReplaySubject<HubConnection> {

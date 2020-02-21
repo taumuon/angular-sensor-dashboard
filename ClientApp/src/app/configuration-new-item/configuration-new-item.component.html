@@ -1,0 +1,79 @@
+<div>
+  <h2>New Sensor</h2>
+  <form (ngSubmit)="onSubmit()" #sensorConfigForm="ngForm">
+
+    <div class="form-group">
+      <label for="sensorName">Name</label>
+      <input type="text"
+             class="form-control"
+             id="name"
+             [(ngModel)]="sensorConfig.name" name="name"
+             required
+             #name="ngModel"/>
+      <div [hidden]="name.valid || name.pristine"
+           class="alert alert-danger">
+        Name is required
+      </div>
+      <!--<FormFeedback valid>
+        Name is valid
+      </FormFeedback>
+      <FormFeedback>
+        {errors.sensorName}
+      </FormFeedback>-->
+    </div>
+
+    <div class="form-group">
+      <label for="manufacturer">Manufacturer</label>
+      <input type="text"
+             class="form-control"
+             id="manufacturer"
+             [(ngModel)]="sensorConfig.manufacturer" name="manufacturer"
+             required
+             #manufacturer="ngModel"/>
+      <div [hidden]="manufacturer.valid || manufacturer.pristine"
+           class="alert alert-danger">
+        Manufacturer is required
+      </div>
+      <!--<FormFeedback>
+    {errors.manufacturer}
+  </FormFeedback>-->
+    </div>
+
+    <div class="form-group">
+      <label for="hostDevice">Host Device</label>
+      <input type="text"
+             class="form-control"
+             id="hostDevice"
+             [(ngModel)]="sensorConfig.hostDevice" name="hostDevice"
+             required
+             #hostDevice="ngModel"/>
+      <div [hidden]="hostDevice.valid || hostDevice.pristine"
+           class="alert alert-danger">
+        Host Device is required
+      </div>
+      <!--<FormFeedback>
+    {errors.hostDevice}
+  </FormFeedback>-->
+    </div>
+
+    <div class="form-group">
+      <label for="units">Units</label>
+      <input type="text"
+             class="form-control"
+             id="units"
+             [(ngModel)]="sensorConfig.units" name="units"
+             required
+             #units="ngModel"/>
+      <div [hidden]="units.valid || units.pristine"
+           class="alert alert-danger">
+        Units is required
+      </div>
+      <!--<FormFeedback>
+    {errors.units}
+  </FormFeedback>-->
+    </div>
+
+    <button type="submit" class="btn btn-success" [disabled]="!sensorConfigForm.form.valid">Submit</button>
+  </form>
+</div>
+
