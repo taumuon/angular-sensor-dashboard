@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { HubConnection } from '@microsoft/signalr';
 
-import { Observable, Subject } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { mergeMap, share } from 'rxjs/operators';
 
 import { HubConnectionService } from './hub-connection.service';
 
@@ -14,6 +14,8 @@ import { SensorReading } from './SensorReading';
 })
 export class HubStreamSubscriptionService {
 
+    sensorObservables: Map<string, Observable<SensorReading>> = new Map<string, Observable<SensorReading>>();
+
     constructor(private hubConnectionService: HubConnectionService) {
     }
 
@@ -21,31 +23,42 @@ export class HubStreamSubscriptionService {
 
         // TODO: this relies on knowing the hubConnection is a ReplaySubject, rewrite
         return this.hubConnectionService.getConnection('/streamHub')
-            .asObservable()
             .pipe(mergeMap(hubConnection => this.subscribeStreamToHub(streamName, sensorName, hubConnection)));
     }
 
     subscribeStreamToHub(streamName: string, sensorName: string, hubConnection: HubConnection): Observable<SensorReading> {
         console.log('subscribeStream ' + hubConnection + ' ' + streamName + ' ' + sensorName);
 
-        let sensorReading: Subject<SensorReading> = new Subject<SensorReading>();
+        if (this.sensorObservables.has(sensorName)) {
+            return this.sensorObservables.get(sensorName).pipe(share());
+        }
 
-        const streamSubscription = hubConnection.stream(streamName, sensorName)
-            .subscribe({
-                next: (item) => {
-                    sensorReading.next(<SensorReading>item);
-                },
-                complete: () => {
-                    console.log('completed');
-                },
-                error: (err) => {
-                    console.log(err);
-                },
-            });
+        console.log('subscribing to ' + streamName + ' ' + sensorName);
 
-        // TODO: dispose of stream - where? component lifetimes
-        // TODO: share subscriptions for same sensor names
+        let sensorReading = new Observable<SensorReading>(function subscribe(subscriber) {
+            let subscription = hubConnection.stream(streamName, sensorName)
+              .subscribe({
+                  next: (item) => {
+                      subscriber.next(<SensorReading>item);
+                  },
+                  complete: () => {
+                      console.log('completed');
+                      subscriber.complete();
+                  },
+                  error: (err) => {
+                      console.log(err);
+                      subscriber.error(err);
+                  },
+              });
 
-        return sensorReading.asObservable(); // TODO: return result of stream().subscribe mapped to rx
+            return function unsubscribe() {
+                console.log('unsubscribing from ' + streamName + ' ' + sensorName);
+                subscription.dispose();// .unsubscribe();
+            };
+        });
+
+        this.sensorObservables.set(sensorName, sensorReading)
+
+        return sensorReading;
     }
 }

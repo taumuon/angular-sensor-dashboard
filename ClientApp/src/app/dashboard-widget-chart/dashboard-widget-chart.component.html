@@ -1,5 +1,4 @@
-<div>
-  <div>
-    <h5 class="display-4">CT {{dashboardConfigItem.minMax}}</h5>
-  </div>
+<div *ngIf="(value$ | async) as value; else loading">
+  <h5 class="display-4">CT {{value | number:'1.0-2'}} <small>{{(units)}}</small></h5>
 </div>
+<ng-template #loading>Loading...</ng-template>

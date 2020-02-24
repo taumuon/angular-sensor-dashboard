@@ -1,3 +1,4 @@
-<div>
-  <h5 class="display-4">{{value | number:'1.0-2'}} <small>{{units}}</small></h5>
+<div *ngIf="(value$ | async) as value; else loading">
+  <h5 class="display-4">{{value | number:'1.0-2'}} <small>{{(units)}}</small></h5>
 </div>
+<ng-template #loading>Loading...</ng-template>

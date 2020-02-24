@@ -24,9 +24,12 @@ export class ConfigurationService {
     constructor(private hubConnectionService: HubConnectionService) {
         let url = '/configurationHub';
 
-        this.hubConnected = new ReplaySubject<Object>(1);
-
-        this.startConnection(url);
+        // TODO: Observable create then share
+        if (!this.hubConnected) {
+            console.log('creating hub connection');
+            this.hubConnected = new ReplaySubject<Object>(1);
+            this.startConnection(url);
+        }
     }
 
     getConfig(): Observable<SensorConfigItem[]> {
@@ -36,7 +39,7 @@ export class ConfigurationService {
 
     addSensor(sensorConfigItem: SensorConfigItem) {
         if (this.hubConnection != null) {
-            this.hubConnection.invoke("addSensor", sensorConfigItem.name, sensorConfigItem.manufacturer, sensorConfigItem.hostDevice, sensorConfigItem.units)
+            this.hubConnection.invoke("addSensor", sensorConfigItem.name, sensorConfigItem.manufacturer, sensorConfigItem.hostDevice, sensorConfigItem.sensorUnits)
                 .then(r => {
                     if (r !== '') {
                         alert(`unable to add sensor: ` + r)
@@ -45,7 +48,6 @@ export class ConfigurationService {
         }
     }
 
-    // TODO: use HubStreamSubscription ?
     private startConnection(url: string) {
         this.hubConnectionService.getConnection(url).subscribe(hubConnection => {
             this.connected = true;
@@ -56,8 +58,8 @@ export class ConfigurationService {
 
             hubConnection.invoke("sensors")
                 .then(data => {
-                    console.log("sensors invoked and returned data");
-                    this.SensorConfigSubj.next(data);
+                    console.log("sensors invoked and returned data: " + data);
+                    this.SensorConfigSubj.next(data.map(d => <SensorConfigItem>d));
                 });
         });
     }
