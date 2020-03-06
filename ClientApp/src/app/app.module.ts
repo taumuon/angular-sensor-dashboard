@@ -13,6 +13,9 @@ import { DashboardWidgetValueComponent } from './dashboard-widget-value/dashboar
 import { DashboardWidgetChartComponent } from './dashboard-widget-chart/dashboard-widget-chart.component';
 import { DashboardMinMaxComponent } from './dashboard-min-max/dashboard-min-max.component';
 import { ConfigurationNewItemComponent } from './configuration-new-item/configuration-new-item.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HighchartsChartModule } from 'highcharts-angular';
+
 
 @NgModule({
   declarations: [
@@ -34,7 +37,9 @@ import { ConfigurationNewItemComponent } from './configuration-new-item/configur
       { path: 'dashboard', component: DashboardComponent },
       { path: 'configuration', component: ConfigurationComponent },
     ]),
-    AppRoutingModule
+      AppRoutingModule,
+      BrowserAnimationsModule,
+      HighchartsChartModule
   ],
   providers: [],
   bootstrap: [AppComponent]

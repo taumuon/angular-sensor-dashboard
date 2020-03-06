@@ -23,7 +23,6 @@ export class ConfigurationComponent implements OnInit {
         this.configurationService.getConfig()
             .subscribe(config =>
             {
-                console.log(config);
                 this.SensorConfig = config;
                 this.Loading = false;
             });

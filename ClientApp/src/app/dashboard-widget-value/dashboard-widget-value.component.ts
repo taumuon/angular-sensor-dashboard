@@ -36,11 +36,8 @@ export class DashboardWidgetValueComponent implements OnInit, OnDestroy {
 
         this.unitSubscription = this.configurationService.getConfig()
             .pipe(map(config => {
-                console.log('config ' + config);
                 let found = config.find(c => c.name == this.dashboardConfigItem.sensorName);
                 if (found) {
-                    console.log('found: ' + found);
-                    console.log(found);
                     return found.sensorUnits;
                 }
 
