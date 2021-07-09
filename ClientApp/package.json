@@ -27,7 +27,7 @@
     "aspnet-prerendering": "^3.0.1",
     "bootstrap": "^4.6.0",
     "core-js": "^2.6.12",
-    "highcharts": "^8.2.2",
+    "highcharts": "^9.0.0",
     "highcharts-angular": "^2.10.0",
     "jquery": "3.4.1",
     "oidc-client": "^1.11.5",
